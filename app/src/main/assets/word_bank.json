@@ -1,0 +1,72 @@
+[
+  {
+    "id": "w_1",
+    "word": "NAIROBI",
+    "hint": "Capital city of Kenya",
+    "category": "Towns",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_2",
+    "word": "MOMBASA",
+    "hint": "Famous coastal island city with Fort Jesus",
+    "category": "Towns",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_3",
+    "word": "CHAPATI",
+    "hint": "Popular flatbread delicacy in East Africa",
+    "category": "Food",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_4",
+    "word": "UGALI",
+    "hint": "Staple cornmeal dish served with sukuma wiki",
+    "category": "Food",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_5",
+    "word": "MATATU",
+    "hint": "Vibrant public commuter bus or van",
+    "category": "Commute",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_6",
+    "word": "SAFARI",
+    "hint": "Swahili word for journey or wildlife trip",
+    "category": "Kiswahili",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_7",
+    "word": "KARIBU",
+    "hint": "Swahili greeting for welcome",
+    "category": "Kiswahili",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_8",
+    "word": "ASANTE",
+    "hint": "Swahili word for Thank You",
+    "category": "Kiswahili",
+    "difficulty": "Easy"
+  },
+  {
+    "id": "w_9",
+    "word": "KISUMU",
+    "hint": "Port city on the shores of Lake Victoria",
+    "category": "Towns",
+    "difficulty": "Medium"
+  },
+  {
+    "id": "w_10",
+    "word": "MUKIMO",
+    "hint": "Traditional dish made of mashed potatoes, corn, and greens",
+    "category": "Food",
+    "difficulty": "Medium"
+  }
+]

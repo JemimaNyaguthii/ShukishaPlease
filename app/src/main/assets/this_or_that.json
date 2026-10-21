@@ -1,0 +1,37 @@
+[
+  {
+    "id": "tot_1",
+    "prompt": "Matatu Seating Preference",
+    "optionA": "Front seat with the driver",
+    "optionB": "Back row with friends",
+    "category": "Commute"
+  },
+  {
+    "id": "tot_2",
+    "prompt": "Morning Commute Snack",
+    "optionA": "Hot Tea & Chapati",
+    "optionB": "Coffee & Mandazi",
+    "category": "Food"
+  },
+  {
+    "id": "tot_3",
+    "prompt": "Commuter Vibe",
+    "optionA": "Loud Matatu Music Mix",
+    "optionB": "Quiet Ride with Headphones",
+    "category": "Lifestyle"
+  },
+  {
+    "id": "tot_4",
+    "prompt": "Weekend Getaway",
+    "optionA": "Sunny Beach in Mombasa",
+    "optionB": "Hiking in Mount Kenya",
+    "category": "Travel"
+  },
+  {
+    "id": "tot_5",
+    "prompt": "Commute Entertainment",
+    "optionA": "Commuter Trivia & Games",
+    "optionB": "Watching Out the Window",
+    "category": "Commute"
+  }
+]

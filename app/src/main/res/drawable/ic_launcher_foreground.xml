@@ -1,0 +1,53 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+  <!-- Outer Black Border Outline -->
+  <path
+      android:strokeColor="#111008"
+      android:strokeWidth="4"
+      android:fillColor="#FFBDF2"
+      android:pathData="M24,20 h60 a16,16 0,0 1,16 16 v56 a16,16 0,0 1,-16 16 h-60 a16,16 0,0 1,-16 -16 v-56 a16,16 0,0 1,16 -16 z"/>
+
+  <!-- Coral Cap -->
+  <path
+      android:strokeColor="#111008"
+      android:strokeWidth="4"
+      android:fillColor="#F47C7C"
+      android:pathData="M28,32 c0,-14 52,-14 52,0 z"/>
+
+  <!-- Yellow Mascot Body -->
+  <path
+      android:strokeColor="#111008"
+      android:strokeWidth="4"
+      android:fillColor="#FFD84D"
+      android:pathData="M30,36 h48 a12,12 0,0 1,12 12 v36 a12,12 0,0 1,-12 12 h-48 a12,12 0,0 1,-12 -12 v-36 a12,12 0,0 1,12 -12 z"/>
+
+  <!-- Left Eye -->
+  <path
+      android:strokeColor="#111008"
+      android:strokeWidth="3"
+      android:fillColor="#FFFFFF"
+      android:pathData="M42,52 m-8,0 a8,8 0,1 1,16 0 a8,8 0,1 1,-16 0"/>
+  <path
+      android:fillColor="#111008"
+      android:pathData="M42,52 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"/>
+
+  <!-- Right Eye -->
+  <path
+      android:strokeColor="#111008"
+      android:strokeWidth="3"
+      android:fillColor="#FFFFFF"
+      android:pathData="M66,52 m-8,0 a8,8 0,1 1,16 0 a8,8 0,1 1,-16 0"/>
+  <path
+      android:fillColor="#111008"
+      android:pathData="M66,52 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"/>
+
+  <!-- Smile -->
+  <path
+      android:strokeColor="#111008"
+      android:strokeWidth="3.5"
+      android:strokeLineCap="round"
+      android:pathData="M46,70 q8,8 16,0"/>
+</vector>

@@ -1,0 +1,358 @@
+package com.jem.shukishaplease.features.trivia
+
+import android.content.Context
+import android.util.Log
+import com.jem.shukishaplease.core.database.LocalQuestionCache
+import com.jem.shukishaplease.core.model.TriviaQuestion
+
+class TriviaRepository(private val context: Context? = null) {
+    private val localCache = context?.let { LocalQuestionCache(it) }
+    private val aiDataSource = AiTriviaDataSource(context)
+    private val assetSource = context?.let { AssetTriviaDataSource(it) }
+
+    val categories = listOf(
+        "All",
+        "Celebrities and Entertainment",
+        "Towns and Places",
+        "Economics and Money",
+        "Books and Literature",
+        "Sports",
+        "Science and Technology",
+        "Culture and History",
+        "General Knowledge"
+    )
+
+    suspend fun getQuestions(category: String? = null, difficulty: String? = null): Pair<List<TriviaQuestion>, String?> {
+        val cat = category ?: "All"
+        val diff = difficulty ?: "All"
+
+        Log.d("ShukishaTrivia", "Repository: getQuestions called for category='$cat', difficulty='$diff'")
+
+        // 1. Try AI Generation FIRST if specific category selected
+        if (cat != "All") {
+            try {
+                Log.d("ShukishaTrivia", "Repository: Requesting AI questions from AiTriviaDataSource...")
+                val aiQuestions = aiDataSource.generateAiQuestions(cat, diff)
+                if (aiQuestions.isNotEmpty()) {
+                    Log.d("ShukishaTrivia", "Repository: AI questions received! Caching and returning ${aiQuestions.size} questions.")
+                    localCache?.saveCachedQuestions(cat, aiQuestions)
+                    return Pair(aiQuestions, null)
+                }
+            } catch (e: Exception) {
+                val errorMsg = e.localizedMessage ?: e::class.java.simpleName
+                Log.e("ShukishaTrivia", "Repository: AI Generation Exception: $errorMsg", e)
+            }
+        }
+
+        // 2. Try Asset JSON Bank fallback (returns 3 questions)
+        if (assetSource != null) {
+            val assetQuestions = assetSource.getQuestionsForCategory(cat, diff)
+            if (assetQuestions.isNotEmpty()) {
+                Log.d("ShukishaTrivia", "Repository: Loaded ${assetQuestions.size} questions from Asset JSON Bank for '$cat'.")
+                return Pair(assetQuestions, null)
+            }
+        }
+
+        // 3. Try Local Cache fallback
+        if (localCache != null) {
+            val cached = localCache.getCachedQuestions(cat, diff)
+            if (cached.isNotEmpty()) {
+                Log.d("ShukishaTrivia", "Repository: Loaded ${cached.size} questions from Local Cache for '$cat'.")
+                return Pair(cached, null)
+            }
+        }
+
+        // 4. Fallback to Curated Offline Questions
+        Log.d("ShukishaTrivia", "Repository: Loading curated offline question bank for '$cat'.")
+        return Pair(getCuratedQuestions(cat, diff), null)
+    }
+
+    private fun getCuratedQuestions(category: String, difficulty: String): List<TriviaQuestion> {
+        val allQuestions = listOf(
+            // Towns and Places
+            TriviaQuestion(
+                id = "tp_1",
+                category = "Towns and Places",
+                questionText = "Which Rift Valley town in Kenya is famous for its pink flamingo-lined lake and national park?",
+                options = listOf("Nakuru", "Naivasha", "Eldoret", "Kericho"),
+                correctAnswerIndex = 0,
+                explanation = "Lake Nakuru National Park is world-famous for flamingos nesting along its shores.",
+                difficulty = "Easy",
+                reference = "Kenya Tourism Board",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "tp_2",
+                category = "Towns and Places",
+                questionText = "Which coastal city in Kenya features the historic 16th-century Portuguese fortress Fort Jesus?",
+                options = listOf("Malindi", "Mombasa", "Lamu", "Diani"),
+                correctAnswerIndex = 1,
+                explanation = "Fort Jesus was built by the Portuguese in 1593–1596 to guard the Old Port of Mombasa.",
+                difficulty = "Easy",
+                reference = "UNESCO World Heritage",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "tp_3",
+                category = "Towns and Places",
+                questionText = "Which high-altitude Kenyan town is internationally renowned as the 'Home of Champions' for long-distance runners?",
+                options = listOf("Iten", "Kapsabet", "Eldoret", "Nyeri"),
+                correctAnswerIndex = 0,
+                explanation = "Iten sits at 2,400 meters altitude and is the global training hub for world-champion marathoners.",
+                difficulty = "Easy",
+                reference = "Athletics Kenya",
+                isAiGenerated = false
+            ),
+
+            // Economics and Money
+            TriviaQuestion(
+                id = "ec_1",
+                category = "Economics and Money",
+                questionText = "Which regulator oversees the banking sector and issues banknotes in Kenya?",
+                options = listOf("Central Bank of Kenya", "Kenya Revenue Authority", "Nairobi Securities Exchange", "Treasury"),
+                correctAnswerIndex = 0,
+                explanation = "The Central Bank of Kenya (CBK) formulates monetary policy and regulates financial institutions.",
+                difficulty = "Easy",
+                reference = "Central Bank of Kenya",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "ec_2",
+                category = "Economics and Money",
+                questionText = "What term describes the percentage rate charged by lenders to borrowers on loan facilities?",
+                options = listOf("Interest Rate", "Inflation Rate", "Exchange Rate", "Discount Rate"),
+                correctAnswerIndex = 0,
+                explanation = "Interest rate represents the cost of borrowing capital over time.",
+                difficulty = "Easy",
+                reference = "Financial Literacy Handbook",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "ec_3",
+                category = "Economics and Money",
+                questionText = "What is the primary currency of Kenya?",
+                options = listOf("US Dollar", "Kenyan Shilling", "Tanzanian Shilling", "Euro"),
+                correctAnswerIndex = 1,
+                explanation = "The Kenyan Shilling (KES) is the official currency of Kenya issued by the Central Bank of Kenya.",
+                difficulty = "Easy",
+                reference = "Central Bank of Kenya",
+                isAiGenerated = false
+            ),
+
+            // Sports
+            TriviaQuestion(
+                id = "sp_1",
+                category = "Sports",
+                questionText = "Which famous Kenyan middle-distance runner won back-to-back Olympic gold medals in the 800m in 2012 and 2016?",
+                options = listOf("David Rudisha", "Asbel Kiprop", "Ezekiel Kemboi", "Conseslus Kipruto"),
+                correctAnswerIndex = 0,
+                explanation = "David Rudisha set the world record of 1:40.91 at the 2012 London Olympics.",
+                difficulty = "Medium",
+                reference = "World Athletics",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "sp_2",
+                category = "Sports",
+                questionText = "What is the traditional premier football derby in Kenya played between Gor Mahia and AFC Leopards?",
+                options = listOf("Mashemeji Derby", "Mombasa Derby", "Rift Valley Classic", "Capital Clash"),
+                correctAnswerIndex = 0,
+                explanation = "The Mashemeji Derby is Kenya's oldest and most passionate club football rivalry.",
+                difficulty = "Medium",
+                reference = "Football Kenya Federation",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "sp_3",
+                category = "Sports",
+                questionText = "Which city hosted the historic 2019 INEOS 1:59 Challenge where Eliud Kipchoge ran a marathon in under 2 hours?",
+                options = listOf("Nairobi", "London", "Vienna", "Berlin"),
+                correctAnswerIndex = 2,
+                explanation = "Eliud Kipchoge ran the marathon in 1:59:40 in Vienna, Austria, on October 12, 2019.",
+                difficulty = "Medium",
+                reference = "World Athletics",
+                isAiGenerated = false
+            ),
+
+            // Science and Technology
+            TriviaQuestion(
+                id = "st_1",
+                category = "Science and Technology",
+                questionText = "What green renewable energy source produces over 40% of Kenya's total electricity supply from the Great Rift Valley?",
+                options = listOf("Geothermal Power", "Nuclear Energy", "Coal Power", "Biomass"),
+                correctAnswerIndex = 0,
+                explanation = "Kenya is a global leader in geothermal energy generation centered around Olkaria near Naivasha.",
+                difficulty = "Easy",
+                reference = "KenGen Energy Report",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "st_2",
+                category = "Science and Technology",
+                questionText = "What pioneering mobile money transfer service was launched in Kenya in 2007 by Safaricom?",
+                options = listOf("PayPal", "M-Pesa", "Visa", "Apple Pay"),
+                correctAnswerIndex = 1,
+                explanation = "M-Pesa revolutionized financial inclusion in Kenya and across developing economies.",
+                difficulty = "Easy",
+                reference = "Safaricom Historical Archives",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "st_3",
+                category = "Science and Technology",
+                questionText = "Which planet in our solar system is known as the Red Planet?",
+                options = listOf("Venus", "Mars", "Jupiter", "Saturn"),
+                correctAnswerIndex = 1,
+                explanation = "Mars appears red due to iron oxide (rust) on its surface.",
+                difficulty = "Easy",
+                reference = "NASA Science",
+                isAiGenerated = false
+            ),
+
+            // Celebrities and Entertainment
+            TriviaQuestion(
+                id = "ce_1",
+                category = "Celebrities and Entertainment",
+                questionText = "Which Academy Award-winning Kenyan actress starred in '12 Years a Slave' and 'Black Panther'?",
+                options = listOf("Lupita Nyong'o", "Genevieve Nnaji", "Yvonne Orji", "Mimi Mars"),
+                correctAnswerIndex = 0,
+                explanation = "Lupita Nyong'o won the Academy Award for Best Supporting Actress in 2014.",
+                difficulty = "Easy",
+                reference = "Academy Awards Archive",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "ce_2",
+                category = "Celebrities and Entertainment",
+                questionText = "Which iconic Kenyan coastal music genre blends traditional rhythms with hip-hop and dancehall?",
+                options = listOf("Bongo Flava", "Genge", "Ohangla", "Mwanandenge / Chakacha"),
+                correctAnswerIndex = 3,
+                explanation = "Coastal genres like Chakacha and Taarab deeply influence Kenyan entertainment and coastal pop culture.",
+                difficulty = "Medium",
+                reference = "East African Music Heritage",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "ce_3",
+                category = "Celebrities and Entertainment",
+                questionText = "Which Kenyan Afro-pop band composed hits like 'Sura Yako', 'Melanin', and 'Midnight Train'?",
+                options = listOf("Elani", "Sauti Sol", "Hart the Band", "Camp Mulla"),
+                correctAnswerIndex = 1,
+                explanation = "Sauti Sol is an internationally acclaimed Kenyan Afro-pop band formed in Nairobi.",
+                difficulty = "Easy",
+                reference = "Kenyan Music Awards",
+                isAiGenerated = false
+            ),
+
+            // Books and Literature
+            TriviaQuestion(
+                id = "bl_1",
+                category = "Books and Literature",
+                questionText = "Who authored the acclaimed post-independence Kenyan novel 'Weep Not, Child'?",
+                options = listOf("Ngũgĩ wa Thiong'o", "Meja Mwangi", "Grace Ogot", "Binyavanga Wainaina"),
+                correctAnswerIndex = 0,
+                explanation = "'Weep Not, Child' published in 1964 was Ngũgĩ wa Thiong'o's debut novel.",
+                difficulty = "Medium",
+                reference = "African Literature History",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "bl_2",
+                category = "Books and Literature",
+                questionText = "Which famous Nigerian author wrote the classic novel 'Things Fall Apart'?",
+                options = listOf("Wole Soyinka", "Chinua Achebe", "Chimamanda Ngozi Adichie", "Ben Okri"),
+                correctAnswerIndex = 1,
+                explanation = "'Things Fall Apart' published in 1958 is one of the most widely read African novels.",
+                difficulty = "Easy",
+                reference = "African Classics",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "bl_3",
+                category = "Books and Literature",
+                questionText = "Who wrote the play 'The Trial of Dedan Kimathi' alongside Micere Githae Mugo?",
+                options = listOf("Ngũgĩ wa Thiong'o", "Okot p'Bitek", "Meja Mwangi", "Francis Imbuga"),
+                correctAnswerIndex = 0,
+                explanation = "'The Trial of Dedan Kimathi' is a famous Kenyan play commemorating the Mau Mau freedom movement.",
+                difficulty = "Medium",
+                reference = "East African Plays",
+                isAiGenerated = false
+            ),
+
+            // Culture and History
+            TriviaQuestion(
+                id = "ch_1",
+                category = "Culture and History",
+                questionText = "In what year did Kenya gain independence from British colonial rule?",
+                options = listOf("1952", "1963", "1964", "1978"),
+                correctAnswerIndex = 1,
+                explanation = "Kenya gained independence on December 12, 1963.",
+                difficulty = "Easy",
+                reference = "National Archives of Kenya",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "ch_2",
+                category = "Culture and History",
+                questionText = "Who was Kenya's first President following independence?",
+                options = listOf("Daniel arap Moi", "Jomo Kenyatta", "Mwai Kibaki", "Oginga Odinga"),
+                correctAnswerIndex = 1,
+                explanation = "Jomo Kenyatta served as Prime Minister and then President from 1963 until 1978.",
+                difficulty = "Easy",
+                reference = "Kenyan Presidential History",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "ch_3",
+                category = "Culture and History",
+                questionText = "What traditional East African garment is made of colorful printed cotton cloth with Swahili proverbs printed on the border?",
+                options = listOf("Kikoy", "Kanga / Leso", "Kitenge", "Shúkà"),
+                correctAnswerIndex = 1,
+                explanation = "Kanga (or Leso) is a staple coastal garment carrying cultural Swahili proverbs.",
+                difficulty = "Easy",
+                reference = "Swahili Cultural Heritage",
+                isAiGenerated = false
+            ),
+
+            // General Knowledge
+            TriviaQuestion(
+                id = "gk_1",
+                category = "General Knowledge",
+                questionText = "How many counties make up the Republic of Kenya under the 2010 Constitution?",
+                options = listOf("42", "47", "52", "37"),
+                correctAnswerIndex = 1,
+                explanation = "Kenya is divided into 47 semi-autonomous counties.",
+                difficulty = "Easy",
+                reference = "Constitution of Kenya 2010",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "gk_2",
+                category = "General Knowledge",
+                questionText = "What is the highest mountain in Kenya and the second-highest in Africa?",
+                options = listOf("Mount Elgon", "Mount Kenya", "Mount Kilimanjaro", "Aberdare Range"),
+                correctAnswerIndex = 1,
+                explanation = "Mount Kenya stands at 5,199 meters high.",
+                difficulty = "Easy",
+                reference = "Geographical Survey of Kenya",
+                isAiGenerated = false
+            ),
+            TriviaQuestion(
+                id = "gk_3",
+                category = "General Knowledge",
+                questionText = "Which ocean borders Kenya to the southeast?",
+                options = listOf("Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Southern Ocean"),
+                correctAnswerIndex = 1,
+                explanation = "Kenya has over 500 km of coastline along the Indian Ocean.",
+                difficulty = "Easy",
+                reference = "East African Geography",
+                isAiGenerated = false
+            )
+        )
+
+        return allQuestions.filter { q ->
+            (category.equals("All", ignoreCase = true) || q.category.equals(category, ignoreCase = true)) &&
+                    (difficulty.equals("All", ignoreCase = true) || q.difficulty.equals(difficulty, ignoreCase = true))
+        }
+    }
+}
