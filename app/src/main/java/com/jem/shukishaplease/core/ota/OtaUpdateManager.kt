@@ -37,6 +37,9 @@ class OtaUpdateManager(private val context: Context) {
             connection.requestMethod = "GET"
             connection.connectTimeout = 5000
             connection.readTimeout = 5000
+            connection.useCaches = false
+            connection.setRequestProperty("User-Agent", "ShukishaApp/1.0")
+            connection.setRequestProperty("Cache-Control", "no-cache")
 
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                 val reader = BufferedReader(InputStreamReader(connection.inputStream))
@@ -51,6 +54,8 @@ class OtaUpdateManager(private val context: Context) {
                 val currentVersionCode = BuildConfig.VERSION_CODE
                 val isAvailable = latestVersionCode > currentVersionCode
 
+                Log.d("OtaUpdateManager", "Latest VersionCode: $latestVersionCode, Current VersionCode: $currentVersionCode, IsAvailable: $isAvailable")
+
                 OtaUpdateInfo(
                     versionCode = latestVersionCode,
                     versionName = latestVersionName,
@@ -59,6 +64,7 @@ class OtaUpdateManager(private val context: Context) {
                     isUpdateAvailable = isAvailable
                 )
             } else {
+                Log.e("OtaUpdateManager", "HTTP Response Error: ${connection.responseCode}")
                 OtaUpdateInfo(0, "", "", "", false)
             }
         } catch (e: Exception) {

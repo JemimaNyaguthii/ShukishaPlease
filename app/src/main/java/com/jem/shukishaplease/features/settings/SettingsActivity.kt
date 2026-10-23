@@ -444,7 +444,8 @@ fun SettingsScreen(
                             onClick = {
                                 isCheckingOta = true
                                 coroutineScope.launch {
-                                    val info = otaManager.checkForUpdates("https://raw.githubusercontent.com/JemimaNyaguthii/ShukishaPlease/main/update.json")
+                                    val cacheBustedUrl = "https://raw.githubusercontent.com/JemimaNyaguthii/ShukishaPlease/main/update.json?t=" + System.currentTimeMillis()
+                                    val info = otaManager.checkForUpdates(cacheBustedUrl)
                                     isCheckingOta = false
                                     if (info.isUpdateAvailable) {
                                         activeOtaInfo = info
