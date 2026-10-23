@@ -104,6 +104,10 @@
             android:exported="false"
             android:theme="@style/Theme.ShukishaPlease" />
         <activity
+            android:name=".features.play.rush.RushActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ShukishaPlease" />
+        <activity
             android:name=".features.settings.SettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.ShukishaPlease" />

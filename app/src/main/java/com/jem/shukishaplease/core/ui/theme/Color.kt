@@ -13,6 +13,7 @@ val NeoPink = Color(0xFFFFBDF2)              // Pink #FFBDF2
 val NeoCoral = Color(0xFFF47C7C)             // Coral #F47C7C
 val PureWhite = Color(0xFFFFFFFF)            // Pure White #FFFFFF
 val NeoMutedGrey = Color(0xFF808080)         // Muted Grey
+val NeoAmberWarning = Color(0xFFFFB020)       // Amber Warning #FFB020
 
 // Additional Active Trip Map & Alert Colors
 val MapBaseBeige = Color(0xFFE9E5D6)         // Map Base #E9E5D6

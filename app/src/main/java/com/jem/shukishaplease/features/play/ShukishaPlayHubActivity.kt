@@ -35,6 +35,7 @@ import com.jem.shukishaplease.MainActivity
 import com.jem.shukishaplease.core.common.CommuterPrefs
 import com.jem.shukishaplease.core.ui.theme.*
 import com.jem.shukishaplease.features.home.BottomNavBarSection
+import com.jem.shukishaplease.features.play.rush.RushActivity
 import com.jem.shukishaplease.features.settings.SettingsActivity
 import com.jem.shukishaplease.features.trip.TripsActivity
 import com.jem.shukishaplease.features.trivia.TriviaActivity
@@ -249,7 +250,7 @@ fun ShukishaPlayHubScreen(
                     }
                 }
 
-                // 3. Featured Card (Kenya Quiz)
+                // 3. Featured Card (Shukisha Rush)
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(28.dp),
@@ -269,7 +270,7 @@ fun ShukishaPlayHubScreen(
                                 border = BorderStroke(2.dp, NeoBlack)
                             ) {
                                 Text(
-                                    text = if (isTripActive) "Fits this trip · ~$etaFormatted" else "Fits this trip · ~8 min",
+                                    text = "New · plays your whole trip",
                                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
@@ -280,7 +281,7 @@ fun ShukishaPlayHubScreen(
                             Spacer(modifier = Modifier.height(10.dp))
 
                             Text(
-                                text = "Kenya\nQuiz",
+                                text = "Shukisha\nRush 🏎️",
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Black,
                                 color = NeoBlack,
@@ -297,7 +298,7 @@ fun ShukishaPlayHubScreen(
                                 ) {}
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "2,140 riding now",
+                                    text = "Knows your stop",
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = NeoBlack
@@ -309,7 +310,7 @@ fun ShukishaPlayHubScreen(
                             Surface(
                                 modifier = Modifier
                                     .clickable {
-                                        val intent = Intent(context, TriviaActivity::class.java)
+                                        val intent = Intent(context, RushActivity::class.java)
                                         context.startActivity(intent)
                                     },
                                 shape = RoundedCornerShape(20.dp),
