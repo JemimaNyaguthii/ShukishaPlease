@@ -24,7 +24,7 @@
 ### Emergency SOS & Safety Sharing
 - **Hold-to-Trigger SOS:** 2-second hold button to trigger emergency actions: direct **Call 999** dialer or live location sharing.
 - **Trusted Contacts:** Select up to 3 trusted contacts directly from your phone book.
-- **Night Safety Prompts:** Automatically prompts you to share your live location when commuting after dark (*"Riding after dark 🌙"*).
+- **Night Safety Prompts:** Automatically prompts you to share your live location when commuting after dark (*"Riding after dark "*).
 
 ###  Commuter Mini-Game Hub
 - **4 Local Kenya Games:** *Kenya Quiz*, *Unscramble It*, *Missing Letters*, and *This or That*.
